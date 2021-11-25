@@ -1,10 +1,13 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 
 import SwiperCore, { Autoplay } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import tmdbApi, { category, movieType } from '../api/tmdbApi'
 import apiConfig from '../api/apiConfig'
+
+import Button, { OulineButton } from './Button'
 
 const HeroSlide = () => {
 	SwiperCore.use([Autoplay])
@@ -39,9 +42,9 @@ const HeroSlide = () => {
 				{movieItems.map((item, i) => (
 					<SwiperSlide key={i}>
 						{({ isActive }) => (
-							<img
-								src={apiConfig.originalImage(item.backdrop_path)}
-								alt={`${item.title} poster`}
+							<HeroSlideItem
+								item={item}
+								className={`${isActive ? 'active' : ''}`}
 							/>
 						)}
 					</SwiperSlide>
@@ -53,6 +56,35 @@ const HeroSlide = () => {
 
 const HeroSlideItem = (props) => {
 	let history = useHistory()
+	const item = props.item
+	const background = apiConfig.originalImage(
+		item.backdrop_path ? item.backdrop_path : item.poster_path
+	)
+
+	return (
+		<div
+			className={`hero-slide__item ${props.className}`}
+			style={{ backgroundImage: `url(${background})` }}
+		>
+			<div className='hero-slide__item__content container'>
+				<div className='hero-slide__item__content__info'>
+					<h2 className='title'>{item.name}</h2>
+					<div className='overview'>{item.overview}</div>
+					<div className='btns'>
+						<Button onClick={() => history.push('/movie/' + item.id)}>
+							Watch now
+						</Button>
+						<OulineButton onClick={() => console.log('trailer')}>
+							Watch Trailer
+						</OulineButton>
+					</div>
+				</div>
+				<div className='hero-slide__item__content__poster'>
+					<img src={apiConfig.w500Image(item.poster_path)} alt='' />
+				</div>
+			</div>
+		</div>
+	)
 }
 
 export default HeroSlide
