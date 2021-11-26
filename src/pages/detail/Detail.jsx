@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router'
 
 import CastList from './CastList'
+import VideoList from './VideoList'
+import MovieList from '../../components/MovieList'
 
 import tmbdApi from '../../api/tmdbApi'
 import apiConfig from '../../api/apiConfig'
@@ -63,7 +65,7 @@ const Detail = () => {
 							</div>
 						</div>
 					</div>
-					{/* <div className='container'>
+					<div className='container'>
 						<div className='section mb-3'>
 							<VideoList id={item.id} />
 						</div>
@@ -73,7 +75,7 @@ const Detail = () => {
 							</div>
 							<MovieList category={category} type='similar' id={item.id} />
 						</div>
-					</div> */}
+					</div>
 				</>
 			)}
 		</>
