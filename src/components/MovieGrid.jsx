@@ -2,9 +2,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { useHistory, useParams } from 'react-router'
 
 import MovieCard from './MovieCard'
-import { OulineButton } from './Button'
+import Button, { OulineButton } from './Button'
 import Input from './Input'
-import Button from './Button'
 
 import tmbdApi, { category, movieType, tvType } from '../api/tmdbApi'
 
