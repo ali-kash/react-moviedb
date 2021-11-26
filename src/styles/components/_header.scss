@@ -55,7 +55,7 @@
 		@include mobile {
 			position: fixed;
 			width: 100%;
-			bottom: 0;
+			bottom: -1px;
 			left: 0;
 			height: 5rem;
 			background-color: $body-bg;

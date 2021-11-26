@@ -11,6 +11,9 @@
 		&__logo {
 			@include flex(center, center);
 			margin-bottom: 3rem;
+			.logo {
+				max-width: 250px;
+			}
 		}
 
 		&__menus {
