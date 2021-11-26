@@ -15,7 +15,7 @@ const Modal = (props) => {
 	)
 }
 
-Modal.PropTypes = {
+Modal.propTypes = {
 	active: PropTypes.bool,
 	id: PropTypes.string,
 }

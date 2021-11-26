@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import SwiperCore, { Autoplay } from 'swiper'
@@ -8,6 +8,7 @@ import tmdbApi, { category, movieType } from '../api/tmdbApi'
 import apiConfig from '../api/apiConfig'
 
 import Button, { OulineButton } from './Button'
+import Modal, { ModalContent } from './Modal'
 
 const HeroSlide = () => {
 	SwiperCore.use([Autoplay])
@@ -37,7 +38,7 @@ const HeroSlide = () => {
 				grabCursor={true}
 				spaceBetween={0}
 				slidesPerView={1}
-				// autoplay={{ delay: 3000 }}
+				// autoplay={{ delay: 4000 }}
 			>
 				{movieItems.map((item, i) => (
 					<SwiperSlide key={i}>
@@ -50,6 +51,9 @@ const HeroSlide = () => {
 					</SwiperSlide>
 				))}
 			</Swiper>
+			{movieItems.map((item, i) => (
+				<TrailerModal key={i} item={item} />
+			))}
 		</div>
 	)
 }
@@ -60,6 +64,21 @@ const HeroSlideItem = (props) => {
 	const background = apiConfig.originalImage(
 		item.backdrop_path ? item.backdrop_path : item.poster_path
 	)
+	const setModalActive = async () => {
+		const modal = document.querySelector(`#modal_${item.id}`)
+		const videos = await tmdbApi.getVideos(category.movie, item.id)
+
+		if (videos.results.length > 0) {
+			const videoSrc = 'https://www.youtube.com/embed/' + videos.results[0].key
+			modal
+				.querySelector('.modal__content > iframe')
+				.setAttribute('src', videoSrc)
+		} else {
+			modal.querySelector('.modal__content').innerHTML = 'No Trailer'
+		}
+
+		modal.classList.toggle('active')
+	}
 
 	return (
 		<div
@@ -74,9 +93,7 @@ const HeroSlideItem = (props) => {
 						<Button onClick={() => history.push('/movie/' + item.id)}>
 							Watch now
 						</Button>
-						<OulineButton onClick={() => console.log('trailer')}>
-							Watch Trailer
-						</OulineButton>
+						<OulineButton onClick={setModalActive}>Watch Trailer</OulineButton>
 					</div>
 				</div>
 				<div className='hero-slide__item__content__poster'>
@@ -84,6 +101,25 @@ const HeroSlideItem = (props) => {
 				</div>
 			</div>
 		</div>
+	)
+}
+
+const TrailerModal = (props) => {
+	const item = props.item
+	const iframeRef = useRef(null)
+	const onClose = () => iframeRef.current.setAttribute('src', '')
+
+	return (
+		<Modal active={false} id={`modal_${item.id}`}>
+			<ModalContent onClose={onClose}>
+				<iframe
+					ref={iframeRef}
+					width='100%'
+					height='500px'
+					title='trailer'
+				></iframe>
+			</ModalContent>
+		</Modal>
 	)
 }
 
